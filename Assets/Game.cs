@@ -44,6 +44,7 @@ public class Game : MonoBehaviour
     List<Worker> avail_workers;
     float end_day;
     Market market;
+    Seasons season;
 
     //WindowGraph
     public Sprite dotSprite;
@@ -59,6 +60,7 @@ public class Game : MonoBehaviour
     public GameObject graphContainerObject;
     public GameObject marketButton;
     public Dropdown marketDropDown;
+    public GameObject seasonTextObject;
 
     //WindowGraph Cache variables
     List<float> valueList;
@@ -84,10 +86,11 @@ public class Game : MonoBehaviour
         jobObject.SetActive(false);
         hireWorkersObject.SetActive(false);
         market = new Market();
-        market.UpdateMarket();
-        market.UpdateMarket();
-        market.UpdateMarket();
-        market.UpdateMarket();
+        //market.UpdateMarket();
+        //market.UpdateMarket();
+        //market.UpdateMarket();
+        //market.UpdateMarket();
+        season = new Seasons(seasonTextObject);
 
         //WindowGraph *************************************************************************
         instance = this;
@@ -145,6 +148,7 @@ public class Game : MonoBehaviour
             end_day = 0;
             Shuffle_Workers();  //change available workers
             market.UpdateMarket();
+            season.CheckSeason(seasonTextObject);
         }
 
         //Timers for jobs

@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -105,4 +105,12 @@ public enum BIONIC_TYPE : int
     right_foot,
     left_hand,
     right_hand
+}
+
+public enum SEASONS : int
+{
+    winter,
+    spring,
+    summer,
+    autumn
 }
