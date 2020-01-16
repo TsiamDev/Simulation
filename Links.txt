@@ -1,0 +1,19 @@
+https://stackoverflow.com/questions/56210865/how-to-destroy-dynamic-elements-from-panel-in-unity-c-sharp-script
+https://answers.unity.com/questions/1383436/how-to-make-dynamic-dropdown-to-choose-items-in-an.html
+https://answers.unity.com/questions/1167834/how-do-you-access-the-text-value-of-the-dropdown-u.html
+https://forum.unity.com/threads/how-to-addlistener-featuring-an-argument.266934/
+https://answers.unity.com/questions/174326/change-background-color-of-scrollview.html
+https://stackoverflow.com/questions/3519539/how-to-check-if-a-string-contains-any-of-some-strings
+
+//progress bar
+https://answers.unity.com/questions/1206187/timer-progress-bar-1.html
+https://www.youtube.com/watch?v=bcvLM_riVuw
+
+//Multiple menus
+https://www.youtube.com/watch?v=23p1vFsNvKo
+
+//Enum names
+https://www.dotnetperls.com/enum-getname
+
+//Graph
+https://www.youtube.com/watch?v=ck72XNhxeS0&list=PLzDRvYVwl53v5ur4GluoabyckImZz3TVQ
