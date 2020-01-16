@@ -84,6 +84,10 @@ public class Game : MonoBehaviour
         jobObject.SetActive(false);
         hireWorkersObject.SetActive(false);
         market = new Market();
+        market.UpdateMarket();
+        market.UpdateMarket();
+        market.UpdateMarket();
+        market.UpdateMarket();
 
         //WindowGraph *************************************************************************
         instance = this;
@@ -96,32 +100,39 @@ public class Game : MonoBehaviour
         //marketObject = transform.Find("MarketGraphObject").GetComponent<GameObject>();
 
         gameObjectList = new List<GameObject>();
-        
-        //To Delete
-        List<float> valueList = new List<float>() { 5, 32, 45, 56, 34, 23, 13, 2, 150, 34, 6, 34, 65, 2, 45 };
-        IGraphVisual graphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.blue, new Color(1, 1, 1, .5f));
-        ShowGraph(valueList, graphVisual, (int _i) => "Day " + (_i), (float _f) => "€" + Mathf.RoundToInt(_f));
-        if(marketButton != null)
-        {
-            marketButton.GetComponent<Button_UI>().ClickFunc = () =>
-            {
-                SetGraphVisual(graphVisual);
-                marketDropDown.ClearOptions();
-                List<string> str = new List<string>();
-                int count = Enum.GetNames(typeof(RESOURCE_TYPE)).Length;
-                for (int i = 0; i < count; i++)
-                {
-                    str.Add(Enum.GetName(typeof(RESOURCE_TYPE), i));
-                }
-                marketDropDown.AddOptions(str);
-                marketObject.SetActive(true);
-            };
 
-        }
+        //To Delete
+        IGraphVisual graphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.blue, new Color(1, 1, 1, .5f));
+        //List<float> valueList = new List<float>() { 5, 32, 45, 56, 34, 23, 13, 2, 150, 34, 6, 34, 65, 2, 45 };
+        List<float> valueList = CopyArrayToList(market.pastValues, 0);
+        ShowGraph(valueList, graphVisual, (int _i) => "Day " + (_i), (float _f) => "€" + Mathf.RoundToInt(_f));
+        marketButton.GetComponent<Button_UI>().ClickFunc = () =>
+        {
+            SetGraphVisual(graphVisual);
+            marketDropDown.ClearOptions();
+            List<string> str = new List<string>();
+            int count = Enum.GetNames(typeof(RESOURCE_TYPE)).Length;
+            for (int i = 0; i < count; i++)
+            {
+                str.Add(Enum.GetName(typeof(RESOURCE_TYPE), i));
+            }
+            marketDropDown.AddOptions(str);
+            marketObject.SetActive(true);
+        };
 
         tooltipGameObject = graphContainer.Find("Tooltip").gameObject;
         //*************************************************************************************
 
+    }
+
+    private List<float> CopyArrayToList(float[,] array, int selected_dim)
+    {
+        List<float> list = new List<float>();
+        for (int i = 0; i < 10; i++)
+        {
+            list.Add(array[selected_dim,i]);
+        }
+        return list;
     }
 
     // Update is called once per frame
@@ -198,6 +209,12 @@ public class Game : MonoBehaviour
         }
     }
     //WINDOWGRAPH ********************************************************************
+    public void OnMarketDropValueChanged()
+    {
+        RESOURCE_TYPE tmp = (RESOURCE_TYPE)Enum.Parse(typeof(RESOURCE_TYPE), marketDropDown.options[marketDropDown.value].text, true);
+        this.valueList = CopyArrayToList(market.pastValues, (int) tmp);
+        SetGraphVisual(graphVisual);
+    }
     private void SetGraphVisual(IGraphVisual graphVisual)
     {
         ShowGraph(this.valueList, graphVisual, this.getAxisLabelX, this.getAxisLabelY);
