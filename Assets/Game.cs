@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -101,20 +101,23 @@ public class Game : MonoBehaviour
         List<float> valueList = new List<float>() { 5, 32, 45, 56, 34, 23, 13, 2, 150, 34, 6, 34, 65, 2, 45 };
         IGraphVisual graphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.blue, new Color(1, 1, 1, .5f));
         ShowGraph(valueList, graphVisual, (int _i) => "Day " + (_i), (float _f) => "€" + Mathf.RoundToInt(_f));
-        
-        marketButton.GetComponent<Button_UI>().ClickFunc = () =>
+        if(marketButton != null)
         {
-            SetGraphVisual(graphVisual);
-            marketDropDown.ClearOptions();
-            List<string> str = new List<string>();
-            int count = Enum.GetNames(typeof(RESOURCE_TYPE)).Length;
-            for (int i = 0; i < count; i++)
+            marketButton.GetComponent<Button_UI>().ClickFunc = () =>
             {
-                str.Add(Enum.GetName(typeof(RESOURCE_TYPE), i));
-            }
-            marketDropDown.AddOptions(str);
-            marketObject.SetActive(true);
-        };
+                SetGraphVisual(graphVisual);
+                marketDropDown.ClearOptions();
+                List<string> str = new List<string>();
+                int count = Enum.GetNames(typeof(RESOURCE_TYPE)).Length;
+                for (int i = 0; i < count; i++)
+                {
+                    str.Add(Enum.GetName(typeof(RESOURCE_TYPE), i));
+                }
+                marketDropDown.AddOptions(str);
+                marketObject.SetActive(true);
+            };
+
+        }
 
         tooltipGameObject = graphContainer.Find("Tooltip").gameObject;
         //*************************************************************************************
