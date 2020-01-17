@@ -10,10 +10,13 @@ public class Job
     public string job_name;
     public float time_left;
     public bool is_displayed;
+    public bool is_harvesting_job;
+    public Property property;
 
     static int num = 0;
 
     //Constants
+    const int HARVESTING_WORK = 10; //for orchards,livestock and aquaculture
     //Orchards
     const int PRUNING_WORK = 10;
     const int FERTILIZING_WORK = 15;
@@ -26,16 +29,57 @@ public class Job
     //Aquaculture
     const int MAINTENANCE_WORK = 15;
 
-    public Job(string p_type, string job_type, string name)
+    public Job(string p_type, string job_type, string name, Property property)
     {
-        is_displayed = false;
+        this.is_harvesting_job = false;
+        this.is_displayed = false;
         num++;
         SetType(p_type);
         SetSubType(job_type);
         this.job_name = name + " " + num;
         this.time_left = this.work;
+        this.property = property;
     }
  
+    public void CalcWorkDone()
+    {
+        float percentage = 0f;   //THe denominator is the totla number of jobs that have to occur before harvesting
+        if(this.type == PROPERTY_TYPE.orchard)
+        {
+            percentage = (float)(1f / 3f); 
+        }else if (this.type == PROPERTY_TYPE.livestock)
+        {
+            percentage = (float)(1f / 4f);
+        }else if (this.type == PROPERTY_TYPE.aquaculture)
+        {
+            percentage = (float)(1f / 3f);
+        }
+
+        foreach (JOB_SUB_TYPE job in this.property.work_done.Keys)
+        {
+            if(this.property.work_done[job] == true)
+            {
+                this.property.work_completed += percentage;
+            }
+        }
+    }
+
+    public void WorkDone()
+    {
+        if (this.sub_type != JOB_SUB_TYPE.harvesting)
+        {
+            if(this.property.work_done.ContainsKey(this.sub_type) == true)
+            {
+                this.property.work_done[this.sub_type] = true;
+            }
+            else
+            {
+                this.property.work_done.Add(this.sub_type, true);
+            }
+            
+        }
+    }
+
     public void SetType(string type)
     {
         ConvertType(type);
@@ -112,6 +156,11 @@ public class Job
             //this.name += "maintenance " + num;
             this.sub_type = JOB_SUB_TYPE.maintenance;
             this.work = MAINTENANCE_WORK;
+        }else if (sub_type == "harvesting")
+        {
+            this.sub_type = JOB_SUB_TYPE.harvesting;
+            this.work = HARVESTING_WORK;
+            this.is_harvesting_job = true;
         }
     }
 

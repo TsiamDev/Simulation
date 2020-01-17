@@ -8,7 +8,7 @@ public class Seasons
 {
     private const int CHANGE_SEASON = 10;   //In Days
 
-    private SEASONS curSeason;
+    public SEASONS curSeason;
     private int season_count;
 
     public Seasons(GameObject text)

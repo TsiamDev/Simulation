@@ -177,6 +177,7 @@ public class Game : MonoBehaviour
                             avail_workers[i].is_working = false;
                         }
                     }
+                    //Destroy Job Button & Image
                     Transform panelTransform = GameObject.Find("RightContent").transform;
                     foreach (Transform child in panelTransform)
                     {
@@ -186,6 +187,7 @@ public class Game : MonoBehaviour
                         }
                         if(child.name == player.jobs[j].job_name + " img")
                         {
+                            JobResult(player.jobs[j]);
                             Destroy(child.gameObject);
                             player.jobs.RemoveAt(j);
                             progressImgList.RemoveAt(j);
@@ -280,11 +282,11 @@ public class Game : MonoBehaviour
             if(st.rt == rt)
             {
                 Center_value.text = "";
-                Center_name.text = "Name: " + Enum.GetName(typeof(RESOURCE_TYPE), (int)st.rt) + " storage";
+                Center_name.text = "";
                 Center_type.text = "Type: " + Enum.GetName(typeof(RESOURCE_TYPE), (int)st.rt);
                 Center_sub.text = "Amount: " + st.amount.ToString();
-                Center_size.text = "Total Size: " + (st.size * st.amount).ToString();
-                Center_harvesting.text = "";
+                Center_size.text = "Total size: " + (st.size * st.amount).ToString();
+                Center_harvesting.text = "Resource held amount: " + st.held_resource_amount;
                 break;
             }
         }
@@ -543,6 +545,52 @@ public class Game : MonoBehaviour
 
     //JOBS ***************************************************************************
     //cancel button from create job calls this
+    public void JobResult(Job j)
+    {
+        if (j.is_harvesting_job == true)
+        {
+            float amount_harvested = UnityEngine.Random.Range(500, 1000);
+            Debug.Log("amount_harvested before: " + amount_harvested);
+            j.CalcWorkDone();
+            amount_harvested += amount_harvested * j.property.work_completed;
+            Debug.Log("amount_harvested after: " + amount_harvested);
+            //Reset
+            j.property.work_done.Clear();
+            j.property.work_completed = 0;
+            //Add harvested resources to storage or sell them if overflow
+            //string str = Enum.GetName(j.property.resource_type.GetType(), j.property.resource_type);
+            int index = -1;
+            for (int i = 0; i < player.storages.Count; i++)
+            {
+                if(j.property.resource_type == player.storages[i].rt)
+                {
+                    index = i;
+                }
+            }
+            if(index != -1)
+            {
+                player.storages[index].held_resource_amount += amount_harvested;
+                if (player.storages[index].held_resource_amount > (player.storages[index].amount * player.storages[index].size))
+                {
+                    //Resource Overflow - sell excess to market
+                    float tmp = player.storages[index].held_resource_amount - (player.storages[index].amount * player.storages[index].size);
+                    player.storages[index].held_resource_amount = player.storages[index].amount * player.storages[index].size;
+                    player.money += (int)(tmp * market.resource_price_dict[j.property.resource_type]);
+                    money_text.text = "Money: " + player.money;
+                }
+            }
+            else
+            {
+                // No storage bought sell all directly to market
+                player.money += (int)(amount_harvested * market.resource_price_dict[j.property.resource_type]);
+                money_text.text = "Money: " + player.money;
+            }
+        }
+        else
+        {
+            j.WorkDone();
+        }
+    }
     public void OnCancelJob()
     {
         jobObject.SetActive(false);
@@ -582,6 +630,15 @@ public class Game : MonoBehaviour
     //jobDropdown calls this
     public void OnValueChangedJob()
     {
+        Property p = null;
+        foreach (Property prop in player.properties)
+        {
+            if (prop.name == jobDropdown.options[jobDropdown.value].text)
+            {
+                p = prop;
+                break;
+            }
+        }
         jobDropdown2.ClearOptions();
         List<string> str = new List<string>();
         //TODO Add the else if's
@@ -590,23 +647,45 @@ public class Game : MonoBehaviour
             str.Add("pruning");
             str.Add("fertilizing");
             str.Add("spraying");
+            if(((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
+            {
+                str.Add("harvesting");
+            }
         }else if (jobDropdown.options[jobDropdown.value].text.Contains("Livestock"))
         {
             str.Add("wrangling");
             str.Add("cleaning");
             str.Add("feeding");
             str.Add("doctoring");
-        }else if (jobDropdown.options[jobDropdown.value].text.Contains("Aquaculture"))
+            if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
+            {
+                str.Add("harvesting");
+            }
+        }
+        else if (jobDropdown.options[jobDropdown.value].text.Contains("Aquaculture"))
         {
             str.Add("cleaning");
             str.Add("feeding");
             str.Add("maintenance");
+            if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
+            {
+                str.Add("harvesting");
+            }
         }
         jobDropdown2.AddOptions(str);
     }
     //Accept button calls this from job tab
     public void OnAcceptJob()
     {
+        Property p = null;
+        foreach (Property prop in player.properties)
+        {
+            if (prop.name == jobDropdown.options[jobDropdown.value].text)
+            {
+                p = prop;
+                break;
+            }
+        }
         for (int i = 0; i < avail_workers.Count; i++)
         {
             if (jobDropdown3.options[jobDropdown3.value].text == avail_workers[i].name)
@@ -616,7 +695,8 @@ public class Game : MonoBehaviour
                     //TODO check if enough money?
                     player.jobs.Add(new Job(jobDropdown.options[jobDropdown.value].text,     //type
                         jobDropdown2.options[jobDropdown2.value].text,                //sub_type
-                        jobDropdown.options[jobDropdown.value].text + " " + jobDropdown2.options[jobDropdown2.value].text  //name
+                        jobDropdown.options[jobDropdown.value].text + " " + jobDropdown2.options[jobDropdown2.value].text,  //name
+                        p   //the selected property
                         ));
                     avail_workers[i].is_working = true;
                     avail_workers[i].job_name = player.jobs[player.jobs.Count - 1].job_name;

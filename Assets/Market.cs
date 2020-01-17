@@ -5,8 +5,9 @@ using System;
 
 public class Market
 {
-    const float MIN_PRICE = 10;
-    const float MAX_PRICE = 1000;
+    //Price per unit
+    const float MIN_PRICE = 1;
+    const float MAX_PRICE = 50;
 
     public Dictionary<RESOURCE_TYPE, float> resource_price_dict;
     public float[,] pastValues;

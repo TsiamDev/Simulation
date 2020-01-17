@@ -49,6 +49,7 @@ public enum PROPERTY_SUB_TYPE : int
 
 public enum JOB_SUB_TYPE : int
 {
+    harvesting, //this is for orchards, livestock and aquaculture
     //Orchards
     pruning,
     fertilizing,
@@ -59,8 +60,7 @@ public enum JOB_SUB_TYPE : int
     feeding,    //this is for aquaculture as well
     doctoring,
     //Aquaculture
-    maintenance,
-
+    maintenance
 }    
 
 public enum RESOURCE_TYPE : int
@@ -92,7 +92,9 @@ public enum RESOURCE_TYPE : int
     shrimp,
     prawn,
     oyster,
-    mussel
+    mussel,
+    //Electricity
+    electricity
 }
 
 public enum BIONIC_TYPE : int
