@@ -21,22 +21,29 @@ public class Game : MonoBehaviour
     public GameObject jobObject;
     public GameObject hireWorkersObject;
     public GameObject hiredWorkersPanel;
+    public GameObject buyStorageObject;
+    public GameObject seasonTextObject;
+    public GameObject bottomRightContent;
 
     public Dropdown d;
     public Dropdown d1;
+
     public InputField inputf;
+    public InputField storageAmountInputField;
 
     public Text Center_value;
     public Text Center_name;
     public Text Center_type;
     public Text Center_sub;
     public Text Center_size;
+    public Text Center_harvesting;
+    public Text resource_amount;
+    public Text money_text;
 
     public Dropdown jobDropdown;
     public Dropdown jobDropdown2;
     public Dropdown jobDropdown3;
-
-    public Text money_text;
+    public Dropdown storageTypeDropdown;
 
     Player player;
     bool run_timers;
@@ -60,7 +67,7 @@ public class Game : MonoBehaviour
     public GameObject graphContainerObject;
     public GameObject marketButton;
     public Dropdown marketDropDown;
-    public GameObject seasonTextObject;
+
 
     //WindowGraph Cache variables
     List<float> valueList;
@@ -71,6 +78,7 @@ public class Game : MonoBehaviour
     //Consts
     const float DAY = 600;  //6 min in secs
     const int MAX_AVAIL_WORKERS = 5;
+    const int STORAGE_UNIT_COST = 1000;
 
     // Start is called before the first frame update
     void Start()
@@ -188,9 +196,8 @@ public class Game : MonoBehaviour
                 else
                 {
                     //Debug.Log("1");
-                    //timer not elapsed
-                    //update progress bar
-                    if(progressImgList.Count == 0)
+                    //timer not elapsed - update progress bar
+                    if (progressImgList.Count == 0)
                     {
                         //if no images are left dissable timers
                         run_timers = false;
@@ -212,12 +219,114 @@ public class Game : MonoBehaviour
             }
         }
     }
+    //STORAGE ************************************************************************
+    public void AddOptions()
+    {
+        int count = Enum.GetNames(typeof(RESOURCE_TYPE)).Length;
+        List<string> str = new List<string>();
+        storageTypeDropdown.ClearOptions();
+        for (int i = 0; i < count; i++)
+        {
+            str.Add(Enum.GetName(typeof(RESOURCE_TYPE), i));
+        }
+        storageTypeDropdown.AddOptions(str);
+    }
+    //Buy_Storage_Button calls this
+    public void ShowStorageObject()
+    {
+        AddOptions();
+        buyStorageObject.SetActive(true);
+    }
+    //Cancel_Storage_Button calls this
+    public void HideStorageObject()
+    {
+        buyStorageObject.SetActive(false);
+    }
+    //Accept_Storage_Button calls this
+    public void AcceptStorage()
+    {
+        AddStorage();
+        AddStorageButtons();
+        buyStorageObject.SetActive(false);
+    }
+    private void AddStorageButtons()
+    {
+        Transform panelTransform = bottomRightContent.transform;
+        foreach (Transform child in panelTransform)
+        {
+            if((child.name != "Buy_Storage_Button") && (child.name != "Text"))
+            {
+                Destroy(child.gameObject);
+            }
+
+        }
+        foreach  (Storage st in player.storages)
+        {
+            //Create button
+            GameObject button = (GameObject)Instantiate(buttonPrefab);
+            button.transform.position = bottomRightContent.transform.position;
+            button.transform.SetParent(bottomRightContent.transform, false);
+
+            Button tempButton = button.GetComponent<Button>();
+            tempButton.onClick.AddListener(() => StorageButtonClick(st.rt));
+            tempButton.GetComponentInChildren<Text>().text = Enum.GetName(typeof(RESOURCE_TYPE), (int)st.rt) + " storage";
+            tempButton.name = Enum.GetName(typeof(RESOURCE_TYPE), (int)st.rt);
+        }
+    }
+    private void StorageButtonClick(RESOURCE_TYPE rt)
+    {
+        foreach (Storage st in player.storages)
+        {
+            if(st.rt == rt)
+            {
+                Center_value.text = "";
+                Center_name.text = "Name: " + Enum.GetName(typeof(RESOURCE_TYPE), (int)st.rt) + " storage";
+                Center_type.text = "Type: " + Enum.GetName(typeof(RESOURCE_TYPE), (int)st.rt);
+                Center_sub.text = "Amount: " + st.amount.ToString();
+                Center_size.text = "Total Size: " + (st.size * st.amount).ToString();
+                Center_harvesting.text = "";
+                break;
+            }
+        }
+    }
+    private void AddStorage()
+    {
+        bool flag = true;
+        int amount = int.Parse(storageAmountInputField.text);
+        RESOURCE_TYPE rt = (RESOURCE_TYPE)System.Enum.Parse(typeof(RESOURCE_TYPE), storageTypeDropdown.options[storageTypeDropdown.value].text);
+        foreach (Storage st in player.storages)
+        {
+            if (st.rt == rt)
+            {
+                //Storage exists update amount
+                flag = false;
+                if((amount * STORAGE_UNIT_COST) <= player.money)
+                {
+                    player.money -= amount * STORAGE_UNIT_COST;
+                    st.amount += amount;
+                }
+                break;
+            }
+        }
+        if (flag == true)
+        {
+            //Storage doesn't exist - create it
+            if ((amount * STORAGE_UNIT_COST) <= player.money)
+            {
+                player.money -= amount * STORAGE_UNIT_COST;
+                player.storages.Add(new Storage(amount, rt));
+            }
+        }
+        money_text.text = "Money: " + player.money;
+    }
+    //********************************************************************************
     //WINDOWGRAPH ********************************************************************
     public void OnMarketDropValueChanged()
     {
         RESOURCE_TYPE tmp = (RESOURCE_TYPE)Enum.Parse(typeof(RESOURCE_TYPE), marketDropDown.options[marketDropDown.value].text, true);
         this.valueList = CopyArrayToList(market.pastValues, (int) tmp);
         SetGraphVisual(graphVisual);
+        //resource_amount.text =    //update with current inventory value
     }
     private void SetGraphVisual(IGraphVisual graphVisual)
     {
@@ -565,6 +674,7 @@ public class Game : MonoBehaviour
                 Center_type.text = "Type: " + j.type;
                 Center_sub.text = "Sub: " + j.sub_type;
                 Center_size.text = "";
+                Center_harvesting.text = "";
                 break;
             }
         }
@@ -653,6 +763,7 @@ public class Game : MonoBehaviour
                 Center_type.text = "";
                 Center_sub.text = "";
                 Center_size.text = "";
+                Center_harvesting.text = "";
             }
         }
 
@@ -692,6 +803,7 @@ public class Game : MonoBehaviour
                 Center_type.text = "Type: " + p.type;
                 Center_sub.text = "Sub: " + p.sub_type;
                 Center_size.text = "Size: " + p.size;
+                Center_harvesting.text = "Harvesting Period: " + p.harvestingPeriod.ToString();
                 break;
             }
         }

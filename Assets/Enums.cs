@@ -114,3 +114,12 @@ public enum SEASONS : int
     summer,
     autumn
 }
+
+public enum HARVESTING_PERIOD : int
+{
+    winter,
+    spring,
+    summer,
+    autumn,
+    year_round
+}

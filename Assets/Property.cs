@@ -9,6 +9,7 @@ public class Property
     public PROPERTY_TYPE type;
     public PROPERTY_SUB_TYPE sub_type;
     public int size;
+    public HARVESTING_PERIOD harvestingPeriod;
 
     public static int num = 0;
 
@@ -38,64 +39,81 @@ public class Property
         {
             this.type = PROPERTY_TYPE.livestock;
             this.value = size * LIVESTOCK_VALUE;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
         }
         else if (prop_type.Equals("Electricity"))
         {
             this.type = PROPERTY_TYPE.electricity;
             this.value = size * ELECTRICITY_VALUE;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
         }
         else if (prop_type.Equals("Aquaculture"))
         {
             this.type = PROPERTY_TYPE.aquaculture;
             this.value = size * AQUACULTURE_VALUE;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
         }
     }
 
     void Convert_Sub_Type(string prop_sub_type)
     {
+        //Orchards
         if (prop_sub_type.Equals("pear"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.pear;
-        }else if (prop_sub_type.Equals("apple"))
+            this.harvestingPeriod = HARVESTING_PERIOD.autumn;
+        }
+        else if (prop_sub_type.Equals("apple"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.apple;
+            this.harvestingPeriod = HARVESTING_PERIOD.autumn;
         }
         else if (prop_sub_type.Equals("plum"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.plum;
+            this.harvestingPeriod = HARVESTING_PERIOD.spring;
         }
         else if (prop_sub_type.Equals("citrus"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.citrus;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
         }
         else if (prop_sub_type.Equals("olive"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.olive;
+            this.harvestingPeriod = HARVESTING_PERIOD.autumn;
         }
         else if (prop_sub_type.Equals("date"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.date;
+            this.harvestingPeriod = HARVESTING_PERIOD.autumn;
         }
         else if (prop_sub_type.Equals("fig"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.fig;
+            this.harvestingPeriod = HARVESTING_PERIOD.summer;
         }
         else if (prop_sub_type.Equals("orange"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.orange;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
         }
         else if (prop_sub_type.Equals("pecan"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.pecan;
+            this.harvestingPeriod = HARVESTING_PERIOD.autumn;
         }
         else if (prop_sub_type.Equals("cashews"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.cashews;
+            this.harvestingPeriod = HARVESTING_PERIOD.winter;
         }
         else if (prop_sub_type.Equals("almonds"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.almonds;
+            this.harvestingPeriod = HARVESTING_PERIOD.summer;
         }
+        //Electricity
         else if (prop_sub_type.Equals("wind"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.wind;
@@ -104,6 +122,7 @@ public class Property
         {
             this.sub_type = PROPERTY_SUB_TYPE.solar;
         }
+        //Livestock
         else if (prop_sub_type.Equals("cattle"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.cattle;
@@ -124,6 +143,7 @@ public class Property
         {
             this.sub_type = PROPERTY_SUB_TYPE.poultry;
         }
+        //Aquaponics
         else if (prop_sub_type.Equals("carp"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.carp;
