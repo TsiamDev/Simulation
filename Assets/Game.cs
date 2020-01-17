@@ -86,10 +86,10 @@ public class Game : MonoBehaviour
         jobObject.SetActive(false);
         hireWorkersObject.SetActive(false);
         market = new Market();
-        //market.UpdateMarket();
-        //market.UpdateMarket();
-        //market.UpdateMarket();
-        //market.UpdateMarket();
+        market.UpdateMarket();
+        market.UpdateMarket();
+        market.UpdateMarket();
+        market.UpdateMarket();
         season = new Seasons(seasonTextObject);
 
         //WindowGraph *************************************************************************
