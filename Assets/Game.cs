@@ -128,6 +128,7 @@ public class Game : MonoBehaviour
                 str.Add(Enum.GetName(typeof(RESOURCE_TYPE), i));
             }
             marketDropDown.AddOptions(str);
+            UpdateTextValue();
             marketObject.SetActive(true);
         };
 
@@ -323,12 +324,33 @@ public class Game : MonoBehaviour
     }
     //********************************************************************************
     //WINDOWGRAPH ********************************************************************
+    private void UpdateTextValue()
+    {
+        RESOURCE_TYPE tmp = (RESOURCE_TYPE)Enum.Parse(typeof(RESOURCE_TYPE), marketDropDown.options[marketDropDown.value].text, true);
+        int index = -1;
+        for (int i = 0; i < player.storages.Count; i++)
+        {
+            if (player.storages[i].rt == tmp)
+            {
+                index = i;
+            }
+        }
+        if (index != -1)
+        {
+            //At least one storage exists
+            resource_amount.text = player.storages[index].held_resource_amount.ToString();
+        }
+        else
+        {
+            resource_amount.text = "No Storage unit";
+        }
+    }
     public void OnMarketDropValueChanged()
     {
         RESOURCE_TYPE tmp = (RESOURCE_TYPE)Enum.Parse(typeof(RESOURCE_TYPE), marketDropDown.options[marketDropDown.value].text, true);
         this.valueList = CopyArrayToList(market.pastValues, (int) tmp);
         SetGraphVisual(graphVisual);
-        //resource_amount.text =    //update with current inventory value
+        UpdateTextValue();        
     }
     private void SetGraphVisual(IGraphVisual graphVisual)
     {
