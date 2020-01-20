@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
     public GameObject buyStorageObject;
     public GameObject seasonTextObject;
     public GameObject bottomRightContent;
+    public GameObject mapObject;
 
     public Dropdown d;
     public Dropdown d1;
@@ -44,6 +45,11 @@ public class Game : MonoBehaviour
     public Dropdown jobDropdown2;
     public Dropdown jobDropdown3;
     public Dropdown storageTypeDropdown;
+
+    public Scrollbar scrollBarX;
+    public Scrollbar scrollBarY;
+    float prevX;
+    float prevY;
 
     Player player;
     bool run_timers;
@@ -134,7 +140,12 @@ public class Game : MonoBehaviour
 
         tooltipGameObject = graphContainer.Find("Tooltip").gameObject;
         //*************************************************************************************
-
+        //Scrolling ***************************************************************************
+        prevX = 0.50f;
+        prevY = 0.50f;
+        scrollBarX.value = 0.50f;
+        scrollBarY.value = 0.50f;
+        //*************************************************************************************
     }
 
     private List<float> CopyArrayToList(float[,] array, int selected_dim)
@@ -1041,6 +1052,56 @@ public class Game : MonoBehaviour
         //t.GetComponent<CanvasGroup>().interactable = true;
         //propertyScrollView.GetComponent<CanvasGroup>().alpha = 1.0f;
         propertyObject.SetActive(true);
+    }
+    //********************************************************************************
+    //WORLDMAP SCROLLING *************************************************************
+    //ScrollbarX calls this
+    public void ScrollHorizontalAxis()
+    {
+        float dir;
+        if(prevX <= scrollBarX.value)
+        {
+            dir = -1f;
+        }
+        else
+        {
+            dir = 1f;
+        }
+        prevX = scrollBarX.value;
+        Vector3 v3 = new Vector3(dir * scrollBarX.value * 50, 0, 0);
+        mapObject.transform.localPosition += v3;
+        if (mapObject.transform.localPosition.x > 1500)
+        {
+            mapObject.transform.localPosition = new Vector3(1500, mapObject.transform.localPosition.y, 0);
+        }
+        if (mapObject.transform.localPosition.x < -1500)
+        {
+            mapObject.transform.localPosition = new Vector3(-1500, mapObject.transform.localPosition.y, 0);
+        }
+    }
+    //ScrollbarY calls this
+    public void ScrollVerticallAxis()
+    {
+        float dir;
+        if (prevY <= scrollBarY.value)
+        {
+            dir = -1f;
+        }
+        else
+        {
+            dir = 1f;
+        }
+        prevY = scrollBarY.value;
+        Vector3 v3 = new Vector3(0, dir * scrollBarY.value * 50, 0);
+        mapObject.transform.localPosition += v3;
+        if(mapObject.transform.localPosition.y > 1250)
+        {
+            mapObject.transform.localPosition = new Vector3(mapObject.transform.localPosition.x, 1250, 0);
+        }
+        if (mapObject.transform.localPosition.y < -1250)
+        {
+            mapObject.transform.localPosition = new Vector3(mapObject.transform.localPosition.x, -1250, 0);
+        }
     }
     //********************************************************************************
 }
