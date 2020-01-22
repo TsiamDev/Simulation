@@ -125,3 +125,10 @@ public enum HARVESTING_PERIOD : int
     autumn,
     year_round
 }
+
+public enum PROSPERITY : int
+{
+    starving,
+    stagnating,
+    growing
+}

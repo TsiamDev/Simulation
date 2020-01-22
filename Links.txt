@@ -18,3 +18,6 @@ https://stackoverflow.com/questions/16100/convert-a-string-to-an-enum-in-c-sharp
 
 //Graph
 https://www.youtube.com/watch?v=ck72XNhxeS0&list=PLzDRvYVwl53v5ur4GluoabyckImZz3TVQ
+
+//Map
+https://answers.unity.com/questions/519960/interactive-2d-world-map.html
