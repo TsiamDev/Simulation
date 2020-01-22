@@ -6,6 +6,7 @@ public class Region
 {
     public GameObject go;
     public List<City> cities;
+
     public Region(GameObject region)
     {
         this.go = region;

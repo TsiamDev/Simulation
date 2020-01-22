@@ -11,9 +11,11 @@ public class Market
 
     public Dictionary<RESOURCE_TYPE, float> resource_price_dict;
     public float[,] pastValues;
+    public List<Resource> resourcesList;
 
     public Market()
     {
+        resourcesList = new List<Resource>();
         int count = Enum.GetNames(typeof(RESOURCE_TYPE)).Length;
         pastValues = new float[count, 10];
         resource_price_dict = new Dictionary<RESOURCE_TYPE, float>();
@@ -22,6 +24,7 @@ public class Market
             resource_price_dict.Add((RESOURCE_TYPE) i, UnityEngine.Random.Range(MIN_PRICE, MAX_PRICE));
             //Debug.Log("type " + (RESOURCE_TYPE)i + "price " + resource_price_dict[(RESOURCE_TYPE)i]);
             pastValues[i, 9] = resource_price_dict[(RESOURCE_TYPE)i];
+            resourcesList.Add(new Resource((RESOURCE_TYPE)i, UnityEngine.Random.Range(0, 10)));
         }
     }
 
