@@ -8,6 +8,7 @@ using CodeMonkey.Utils;
 public class CityClick : MonoBehaviour
 {
     public GameObject cityScrollView;
+    public GameObject unlockedCitiesScrollView;
     public GameObject Game;
 
     public Text nameText;
@@ -74,6 +75,13 @@ public class CityClick : MonoBehaviour
             }
         }
 
+        foreach (Region reg in regionsList)
+        {
+
+        }
+
+
+        //TO DELETE
         foreach (Region r in regionsList)
         {
             foreach (City c in r.cities)
