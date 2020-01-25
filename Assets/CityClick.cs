@@ -51,9 +51,28 @@ public class CityClick : MonoBehaviour
         regionsList = new List<Region>();
         foreach (GameObject go in regionsObject)
         {
-            regionsList.Add(new Region(go));
+            if(go.name == "HomeRegionObject")
+            {
+                regionsList.Add(new Region(go, true));
+            }
+            else
+            {
+                regionsList.Add(new Region(go, false));
+            }
+
         }
 
+        foreach (Region reg in regionsList)
+        {
+            if(reg.isUnlocked == true)
+            {
+                reg.go.SetActive(true);
+            }
+            else
+            {
+                reg.go.SetActive(false);
+            }
+        }
 
         foreach (Region r in regionsList)
         {
@@ -123,6 +142,13 @@ public class CityClick : MonoBehaviour
     {
         cityScrollView.SetActive(false);
     }
+    //MARKET ******************************************************************
+    //Market_Back_Button calls this
+    public void OnMarketBackButton()
+    {
+        marketObject.SetActive(false);
+    }
+    //*************************************************************************
     //WINDOWGRAPH *************************************************************
     private List<float> CopyArrayToList(float[,] array, int selected_dim)
     {
