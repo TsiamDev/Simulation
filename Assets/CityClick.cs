@@ -68,16 +68,23 @@ public class CityClick : MonoBehaviour
             if(reg.isUnlocked == true)
             {
                 reg.go.SetActive(true);
+                foreach (City c in reg.cities)
+                {
+                    //Create button
+                    GameObject button = (GameObject)Instantiate(buttonPrefab);
+                    button.transform.position = unlockedCitiesScrollView.transform.position;
+                    button.transform.SetParent(unlockedCitiesScrollView.transform, false);
+
+                    Button tempButton = button.GetComponent<Button>();
+                    tempButton.onClick.AddListener(() => UnlockedCity_Button_Click(c));
+                    tempButton.GetComponentInChildren<Text>().text = c.name;
+                    tempButton.name = c.name;
+                }
             }
             else
             {
                 reg.go.SetActive(false);
             }
-        }
-
-        foreach (Region reg in regionsList)
-        {
-
         }
 
 
@@ -120,6 +127,11 @@ public class CityClick : MonoBehaviour
             }
             end_day = 0;
         }
+    }
+
+    public void UnlockedCity_Button_Click(City c)
+    {
+        //TODO DISPLAY 
     }
     void OnMouseDown()
     {
