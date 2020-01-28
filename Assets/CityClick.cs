@@ -10,6 +10,8 @@ public class CityClick : MonoBehaviour
     public GameObject cityScrollView;
     public GameObject unlockedCitiesScrollView;
     public GameObject Game;
+    public GameObject buttonPrefab;
+    public GameObject mapObject;
 
     public Text nameText;
     public Text populationText;
@@ -131,8 +133,9 @@ public class CityClick : MonoBehaviour
 
     public void UnlockedCity_Button_Click(City c)
     {
-        //TODO DISPLAY 
+        mapObject.transform.localPosition = new Vector3(c.go.transform.localPosition.x - 450, c.go.transform.localPosition.y + 250, 0);
     }
+
     void OnMouseDown()
     {
         bool f = false;
