@@ -976,6 +976,7 @@ public class Game : MonoBehaviour
             str.Add("pecan");
             str.Add("cashews");
             str.Add("almonds");
+            
         } else if (d.options[d.value].text.Equals("Livestock"))
         {
             str.Add("cattle");
@@ -1080,6 +1081,35 @@ public class Game : MonoBehaviour
     public void Create_Property_Button()
     {
         propertyObject.SetActive(true);
+        FindReaseachedPropTypes();
+        OnValueChanged();
+    }
+
+    private void FindReaseachedPropTypes()
+    {
+        List<string> str = new List<string>();
+        d.ClearOptions();
+        str.Add("Farm");
+        foreach (Science sci in player.unlockedScience)
+        {
+            if (sci.type == SCIENCE.orchards)
+            {
+                str.Add("Orchard");
+            }
+            else if (sci.type == SCIENCE.electricity)
+            {
+                str.Add("Electricity");
+            }
+            else if (sci.type == SCIENCE.livestock)
+            {
+                str.Add("Livestock");
+            }
+            else if (sci.type == SCIENCE.aquaculture)
+            {
+                str.Add("Aquaculture");
+            }
+        }
+        d.AddOptions(str);
     }
     //********************************************************************************
     //WORLDMAP SCROLLING *************************************************************
