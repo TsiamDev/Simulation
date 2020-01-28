@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Science
 {
-    public List<Science> prerequisites;
-    public List<Science> unlockedNodes;
+    public List<SCIENCE> prerequisites;
+    public List<SCIENCE> unlockedNodes;
     public SCIENCE type;
 
     public Science(SCIENCE type)
     {
-        this.prerequisites = new List<Science>();
-        this.unlockedNodes = new List<Science>();
+        this.prerequisites = new List<SCIENCE>();
+        this.unlockedNodes = new List<SCIENCE>();
         this.type = type;
         AddPrerequisites();
         AddUnlockedNodes();
@@ -21,15 +21,15 @@ public class Science
     {
         if(type == SCIENCE.orchards)
         {
-            unlockedNodes.Add(new Science(SCIENCE.electricity));
+            unlockedNodes.Add(SCIENCE.electricity);
         }
         else if (type == SCIENCE.electricity)
         {
-            unlockedNodes.Add(new Science(SCIENCE.aquaculture));
+            unlockedNodes.Add(SCIENCE.aquaculture);
         }
         else if (type == SCIENCE.aquaculture)
         {
-            unlockedNodes.Add(new Science(SCIENCE.livestock));
+            unlockedNodes.Add(SCIENCE.livestock);
         }
     }
 
@@ -37,15 +37,15 @@ public class Science
     {
         if (type == SCIENCE.electricity)
         {
-            prerequisites.Add(new Science(SCIENCE.orchards));
+            prerequisites.Add(SCIENCE.orchards);
         }
         else if (type == SCIENCE.livestock)
         {
-            prerequisites.Add(new Science(SCIENCE.aquaculture));
+            prerequisites.Add(SCIENCE.aquaculture);
         }
         else if (type == SCIENCE.aquaculture)
         {
-            prerequisites.Add(new Science(SCIENCE.electricity));
+            prerequisites.Add(SCIENCE.electricity);
         }
     }
 }

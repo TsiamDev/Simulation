@@ -1126,18 +1126,17 @@ public class Game : MonoBehaviour
     public void ScienceButtonPress()
     {
         string buttonName = EventSystem.current.currentSelectedGameObject.name;
+        GameObject go = EventSystem.current.currentSelectedGameObject;
         //Debug.Log(buttonName);
         UnlockScience(buttonName);
-        UnlockNewNodes(buttonName);
-        //TODO unlock next nodes in tree
+        UnlockNewNodes(buttonName, go);
     }
-    private void UnlockNewNodes(string buttonName)
+    private void UnlockNewNodes(string buttonName, GameObject go)
     {
         foreach (Button b in scienceButtons)
         {
             if (buttonName == "Orchards_Button")
             {
-                b.GetComponent<Image>().color = Color.red;
                 if (b.name == "Electricity_Button")
                 {
                     b.interactable = true;
@@ -1162,7 +1161,7 @@ public class Game : MonoBehaviour
                 }
             }
         }
-
+        go.GetComponent<Image>().color = Color.green;
     }
 
     private void UnlockScience(string buttonName)
