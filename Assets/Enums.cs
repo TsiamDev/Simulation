@@ -132,3 +132,11 @@ public enum PROSPERITY : int
     stagnating,
     growing
 }
+
+public enum SCIENCE : int
+{
+    orchards,
+    livestock,
+    electricity,
+    aquaculture
+}

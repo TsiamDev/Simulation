@@ -6,6 +6,7 @@ using UnityEditor;
 using System.Linq;
 using CodeMonkey.Utils;
 using System;
+using UnityEngine.EventSystems;
 
 
 
@@ -58,6 +59,9 @@ public class Game : MonoBehaviour
     float end_day;
     Market market;
     Seasons season;
+
+    //Science
+    public List<Button> scienceButtons;
 
     //WindowGraph
     public Sprite dotSprite;
@@ -146,6 +150,19 @@ public class Game : MonoBehaviour
         scrollBarX.value = 0.50f;
         scrollBarY.value = 0.50f;
         //*************************************************************************************
+        //SCIENCE *****************************************************************************
+        foreach (Button b in scienceButtons)
+        {
+            if(b.name == "Orchards_Button")
+            {
+                b.interactable = true;
+            }
+            else
+            {
+                b.interactable = false;
+            }
+        }
+        //**************************************************************************************
     }
 
     private List<float> CopyArrayToList(float[,] array, int selected_dim)
@@ -1101,6 +1118,70 @@ public class Game : MonoBehaviour
         if (mapObject.transform.localPosition.y < -1250)
         {
             mapObject.transform.localPosition = new Vector3(mapObject.transform.localPosition.x, -1250, 0);
+        }
+    }
+    //********************************************************************************
+    //SCIENCE ************************************************************************
+    //Science buttons call this
+    public void ScienceButtonPress()
+    {
+        string buttonName = EventSystem.current.currentSelectedGameObject.name;
+        //Debug.Log(buttonName);
+        UnlockScience(buttonName);
+        UnlockNewNodes(buttonName);
+        //TODO unlock next nodes in tree
+    }
+    private void UnlockNewNodes(string buttonName)
+    {
+        foreach (Button b in scienceButtons)
+        {
+            if (buttonName == "Orchards_Button")
+            {
+                b.GetComponent<Image>().color = Color.red;
+                if (b.name == "Electricity_Button")
+                {
+                    b.interactable = true;
+                }
+            }
+            else if (buttonName == "Electricity_Button")
+            {
+                if (b.name == "Aquaculture_Button")
+                {
+                    b.interactable = true;
+                }
+            }
+            else if (buttonName == "Livestock_Button")
+            {
+
+            }
+            else if (buttonName == "Aquaculture_Button")
+            {
+                if (b.name == "Livestock_Button")
+                {
+                    b.interactable = true;
+                }
+            }
+        }
+
+    }
+
+    private void UnlockScience(string buttonName)
+    {
+        if (buttonName == "Orchards_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.orchards));
+        }
+        else if (buttonName == "Electricity_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.electricity));
+        }
+        else if (buttonName == "Livestock_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.livestock));
+        }
+        else if (buttonName == "Aquaculture_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.aquaculture));
         }
     }
     //********************************************************************************
