@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //IF YOU ADD HERE also add at Property.cs at the convert_type & convert_sub_type
-//and also in Game.cs in OnValueChanged
+//and also in Game.cs in OnValueChanged and perhaps in the jobs menu too
 public enum PROPERTY_TYPE : int
 {
+    farm,
     orchard,
     livestock,
     aquaculture,
@@ -14,6 +15,15 @@ public enum PROPERTY_TYPE : int
 
 public enum PROPERTY_SUB_TYPE : int
 {
+    //Farms
+    wheat,
+    lentils,
+    corn,
+    tomatoes,
+    herbs,
+    carrots,
+    cabbage,
+    potatoes,
     //Orchards
     pear,
     apple,
@@ -49,11 +59,11 @@ public enum PROPERTY_SUB_TYPE : int
 
 public enum JOB_SUB_TYPE : int
 {
-    harvesting, //this is for orchards, livestock and aquaculture
+    harvesting, //this is for farms, orchards, livestock and aquaculture
     //Orchards
     pruning,
-    fertilizing,
-    spraying,
+    fertilizing,    //this is for farms as well
+    spraying,       //this is for farms as well
     //Livestock
     wrangling,
     cleaning,   //this is for aquaculture as well
@@ -65,6 +75,15 @@ public enum JOB_SUB_TYPE : int
 
 public enum RESOURCE_TYPE : int
 {
+    //Farms
+    wheat,
+    lentils,
+    corn,
+    tomatoes,
+    herbs,
+    carrots,
+    cabbage,
+    potatoes,
     //Orchards
     pear,
     apple,

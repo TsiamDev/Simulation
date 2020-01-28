@@ -692,7 +692,16 @@ public class Game : MonoBehaviour
         jobDropdown2.ClearOptions();
         List<string> str = new List<string>();
         //TODO Add the else if's
-        if(jobDropdown.options[jobDropdown.value].text.Contains("Orchard"))
+        if (jobDropdown.options[jobDropdown.value].text.Contains("Farm"))
+        {
+            str.Add("fertilizing");
+            str.Add("spraying");
+            if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
+            {
+                str.Add("harvesting");
+            }
+        }
+        else if(jobDropdown.options[jobDropdown.value].text.Contains("Orchard"))
         {
             str.Add("pruning");
             str.Add("fertilizing");
@@ -943,7 +952,18 @@ public class Game : MonoBehaviour
     {
         List<string> str = new List<string>();
         d1.ClearOptions();
-        if (d.options[d.value].text.Equals("Orchard"))
+        if (d.options[d.value].text.Equals("Farm"))
+        {
+            str.Add("wheat");
+            str.Add("lentils");
+            str.Add("corn");
+            str.Add("tomatoes");
+            str.Add("herbs");
+            str.Add("carrots");
+            str.Add("cabbage");
+            str.Add("potatoes");
+        }
+        else if (d.options[d.value].text.Equals("Orchard"))
         {
             str.Add("pear");
             str.Add("apple");
@@ -1024,9 +1044,6 @@ public class Game : MonoBehaviour
     //Cancel button calls this from property tab
     public void OnCancel()
     {
-        //Transform t = GameObject.Find("Create_Property_Scroll_View").transform;
-        //t.GetComponent<CanvasGroup>().alpha = 0.0f;
-        //t.GetComponent<CanvasGroup>().interactable = false;
         propertyObject.SetActive(false);
     }
     //Accept button calls this from property tab
@@ -1047,8 +1064,6 @@ public class Game : MonoBehaviour
             player.properties.RemoveAt(player.properties.Count - 1);
         }
 
-        //Transform t = GameObject.Find("Create_Property_Scroll_View").transform;
-        //t.GetComponent<CanvasGroup>().alpha = 0.0f;
         propertyObject.SetActive(false);
         display_properties();
     }
@@ -1064,10 +1079,6 @@ public class Game : MonoBehaviour
     //create_property button calls this
     public void Create_Property_Button()
     {
-        //Transform t = propertyObject.Find("Create_Property_Scroll_View").transform;
-        //t.GetComponent<CanvasGroup>().alpha = 1.0f;
-        //t.GetComponent<CanvasGroup>().interactable = true;
-        //propertyScrollView.GetComponent<CanvasGroup>().alpha = 1.0f;
         propertyObject.SetActive(true);
     }
     //********************************************************************************

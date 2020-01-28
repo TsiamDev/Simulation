@@ -17,6 +17,7 @@ public class Property
     public static int num = 0;
 
     //constants
+    const int FARM_VALUE = 1000;
     const int ORCHARD_VALUE = 1000;
     const int LIVESTOCK_VALUE = 1500;
     const int ELECTRICITY_VALUE = 2000;
@@ -36,7 +37,12 @@ public class Property
 
     void Convert_Type(string prop_type)
     {
-        if (prop_type.Equals("Orchard"))
+        if (prop_type.Equals("Farm"))
+        {
+            this.type = PROPERTY_TYPE.farm;
+            this.value = size * FARM_VALUE;
+        }
+        else if (prop_type.Equals("Orchard"))
         {
             this.type = PROPERTY_TYPE.orchard;
             this.value = size * ORCHARD_VALUE;
@@ -62,8 +68,52 @@ public class Property
 
     void Convert_Sub_Type(string prop_sub_type)
     {
+        //Farms
+        if (prop_sub_type.Equals("wheat"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.wheat;
+            this.harvestingPeriod = HARVESTING_PERIOD.summer;
+            this.resource_type = RESOURCE_TYPE.wheat;
+        }else if (prop_sub_type.Equals("lentils"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.lentils;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
+            this.resource_type = RESOURCE_TYPE.lentils;
+        }else if (prop_sub_type.Equals("corn"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.corn;
+            this.harvestingPeriod = HARVESTING_PERIOD.summer;
+            this.resource_type = RESOURCE_TYPE.corn;
+        }else if (prop_sub_type.Equals("tomatoes"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.tomatoes;
+            this.harvestingPeriod = HARVESTING_PERIOD.summer;
+            this.resource_type = RESOURCE_TYPE.tomatoes;
+        }else if (prop_sub_type.Equals("herbs"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.herbs;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
+            this.resource_type = RESOURCE_TYPE.herbs;
+        }else if (prop_sub_type.Equals("carrots"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.carrots;
+            this.harvestingPeriod = HARVESTING_PERIOD.year_round;
+            this.resource_type = RESOURCE_TYPE.carrots;
+        }
+        else if (prop_sub_type.Equals("cabbage"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.cabbage;
+            this.harvestingPeriod = HARVESTING_PERIOD.winter;
+            this.resource_type = RESOURCE_TYPE.cabbage;
+        }
+        else if (prop_sub_type.Equals("potatoes"))
+        {
+            this.sub_type = PROPERTY_SUB_TYPE.potatoes;
+            this.harvestingPeriod = HARVESTING_PERIOD.autumn;
+            this.resource_type = RESOURCE_TYPE.potatoes;
+        }
         //Orchards
-        if (prop_sub_type.Equals("pear"))
+        else if (prop_sub_type.Equals("pear"))
         {
             this.sub_type = PROPERTY_SUB_TYPE.pear;
             this.harvestingPeriod = HARVESTING_PERIOD.autumn;
