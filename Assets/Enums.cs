@@ -154,8 +154,13 @@ public enum PROSPERITY : int
 
 public enum SCIENCE : int
 {
+    //Property science
     orchards,
     livestock,
     electricity,
-    aquaculture
+    aquaculture,
+    //Jobs science
+    fertilizing,
+    spraying,
+    doctoring
 }

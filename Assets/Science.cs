@@ -16,20 +16,24 @@ public class Science
         AddPrerequisites();
         AddUnlockedNodes();
     }
-    
+
     private void AddUnlockedNodes()
     {
-        if(type == SCIENCE.orchards)
+        if (type == SCIENCE.orchards)
         {
             unlockedNodes.Add(SCIENCE.electricity);
-        }
-        else if (type == SCIENCE.electricity)
+        }else if (type == SCIENCE.electricity)
         {
             unlockedNodes.Add(SCIENCE.aquaculture);
-        }
-        else if (type == SCIENCE.aquaculture)
+        }else if (type == SCIENCE.aquaculture)
         {
             unlockedNodes.Add(SCIENCE.livestock);
+        }else if (type == SCIENCE.fertilizing)
+        {
+            unlockedNodes.Add(SCIENCE.spraying);
+        }else if (type == SCIENCE.spraying)
+        {
+            unlockedNodes.Add(SCIENCE.doctoring);
         }
     }
 
@@ -38,14 +42,18 @@ public class Science
         if (type == SCIENCE.electricity)
         {
             prerequisites.Add(SCIENCE.orchards);
-        }
-        else if (type == SCIENCE.livestock)
+        }else if (type == SCIENCE.livestock)
         {
             prerequisites.Add(SCIENCE.aquaculture);
-        }
-        else if (type == SCIENCE.aquaculture)
+        }else if (type == SCIENCE.aquaculture)
         {
             prerequisites.Add(SCIENCE.electricity);
+        }else if (type == SCIENCE.spraying)
+        {
+            prerequisites.Add(SCIENCE.fertilizing);
+        }else if (type == SCIENCE.doctoring)
+        {
+            prerequisites.Add(SCIENCE.spraying);
         }
     }
 }

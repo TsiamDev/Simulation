@@ -153,11 +153,10 @@ public class Game : MonoBehaviour
         //SCIENCE *****************************************************************************
         foreach (Button b in scienceButtons)
         {
-            if(b.name == "Orchards_Button")
+            if( (b.name == "Orchards_Button") || (b.name == "Fertilizing_Button") )
             {
                 b.interactable = true;
-            }
-            else
+            }else
             {
                 b.interactable = false;
             }
@@ -1176,12 +1175,59 @@ public class Game : MonoBehaviour
     }
     //********************************************************************************
     //SCIENCE ************************************************************************
-    //Science buttons call this
+    //SCience jobs buttons call this
+    public void ScienceJobButtonPress()
+    {
+        string buttonName = EventSystem.current.currentSelectedGameObject.name;
+        GameObject go = EventSystem.current.currentSelectedGameObject;
+        UnlockScienceJobs(buttonName);
+        UnlockNewJobNodes(buttonName, go);
+    }
+    private void UnlockScienceJobs(string buttonName)
+    {
+        if (buttonName == "Fertilizing_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.fertilizing));
+        }
+        else if (buttonName == "Spraying_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.spraying));
+        }
+        else if (buttonName == "Doctoring_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.doctoring));
+        }
+    }
+    private void UnlockNewJobNodes(string buttonName, GameObject go)
+    {
+        foreach (Button b in scienceButtons)
+        {
+            if (buttonName == "Fertilizing_Button")
+            {
+                if (b.name == "Spraying_Button")
+                {
+                    b.interactable = true;
+                }
+            }
+            else if (buttonName == "Spraying_Button")
+            {
+                if (b.name == "Doctoring_Button")
+                {
+                    b.interactable = true;
+                }
+            }
+            else if (buttonName == "Doctoring_Button")
+            {
+
+            }
+        }
+        go.GetComponent<Image>().color = Color.green;
+    }
+    //Science property buttons call this
     public void ScienceButtonPress()
     {
         string buttonName = EventSystem.current.currentSelectedGameObject.name;
         GameObject go = EventSystem.current.currentSelectedGameObject;
-        //Debug.Log(buttonName);
         UnlockScience(buttonName);
         UnlockNewNodes(buttonName, go);
     }
