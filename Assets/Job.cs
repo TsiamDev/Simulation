@@ -16,6 +16,7 @@ public class Job
     static int num = 0;
 
     //Constants
+    const int SCIENCE_WORK = 10;
     const int HARVESTING_WORK = 10; //for orchards,livestock and aquaculture
     //Orchards
     const int PRUNING_WORK = 10;
@@ -108,6 +109,9 @@ public class Job
         {
             //this.name = "electricity ";
             this.type = PROPERTY_TYPE.electricity;
+        }else if (type.Contains("Science"))
+        {
+            this.type = PROPERTY_TYPE.science;
         }
     }
 
@@ -161,6 +165,10 @@ public class Job
             this.sub_type = JOB_SUB_TYPE.harvesting;
             this.work = HARVESTING_WORK;
             this.is_harvesting_job = true;
+        }else if (sub_type == "science")
+        {
+            this.sub_type = JOB_SUB_TYPE.science;
+            this.work = SCIENCE_WORK;
         }
     }
 

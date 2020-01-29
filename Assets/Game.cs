@@ -597,48 +597,70 @@ public class Game : MonoBehaviour
     //cancel button from create job calls this
     public void JobResult(Job j)
     {
+        bool success = true;
+        int rand = UnityEngine.Random.Range(1, 10);
+        if (rand <= 3)
+        {
+            success = false;
+        }
         if (j.is_harvesting_job == true)
         {
-            float amount_harvested = UnityEngine.Random.Range(500, 1000);
-            Debug.Log("amount_harvested before: " + amount_harvested);
-            j.CalcWorkDone();
-            amount_harvested += amount_harvested * j.property.work_completed;
-            Debug.Log("amount_harvested after: " + amount_harvested);
-            //Reset
-            j.property.work_done.Clear();
-            j.property.work_completed = 0;
-            //Add harvested resources to storage or sell them if overflow
-            //string str = Enum.GetName(j.property.resource_type.GetType(), j.property.resource_type);
-            int index = -1;
-            for (int i = 0; i < player.storages.Count; i++)
+            if(success == true)
             {
-                if(j.property.resource_type == player.storages[i].rt)
+                float amount_harvested = UnityEngine.Random.Range(500, 1000);
+                Debug.Log("amount_harvested before: " + amount_harvested);
+                j.CalcWorkDone();
+                amount_harvested += amount_harvested * j.property.work_completed;
+                Debug.Log("amount_harvested after: " + amount_harvested);
+                //Reset
+                j.property.work_done.Clear();
+                j.property.work_completed = 0;
+                //Add harvested resources to storage or sell them if overflow
+                //string str = Enum.GetName(j.property.resource_type.GetType(), j.property.resource_type);
+                int index = -1;
+                for (int i = 0; i < player.storages.Count; i++)
                 {
-                    index = i;
+                    if (j.property.resource_type == player.storages[i].rt)
+                    {
+                        index = i;
+                    }
                 }
-            }
-            if(index != -1)
-            {
-                player.storages[index].held_resource_amount += amount_harvested;
-                if (player.storages[index].held_resource_amount > (player.storages[index].amount * player.storages[index].size))
+                if (index != -1)
                 {
-                    //Resource Overflow - sell excess to market
-                    float tmp = player.storages[index].held_resource_amount - (player.storages[index].amount * player.storages[index].size);
-                    player.storages[index].held_resource_amount = player.storages[index].amount * player.storages[index].size;
-                    player.money += (int)(tmp * market.resource_price_dict[j.property.resource_type]);
+                    player.storages[index].held_resource_amount += amount_harvested;
+                    if (player.storages[index].held_resource_amount > (player.storages[index].amount * player.storages[index].size))
+                    {
+                        //Resource Overflow - sell excess to market
+                        float tmp = player.storages[index].held_resource_amount - (player.storages[index].amount * player.storages[index].size);
+                        player.storages[index].held_resource_amount = player.storages[index].amount * player.storages[index].size;
+                        player.money += (int)(tmp * market.resource_price_dict[j.property.resource_type]);
+                        money_text.text = "Money: " + player.money;
+                    }
+                }
+                else
+                {
+                    // No storage bought sell all directly to market
+                    player.money += (int)(amount_harvested * market.resource_price_dict[j.property.resource_type]);
                     money_text.text = "Money: " + player.money;
                 }
-            }
-            else
+            }else
             {
-                // No storage bought sell all directly to market
-                player.money += (int)(amount_harvested * market.resource_price_dict[j.property.resource_type]);
-                money_text.text = "Money: " + player.money;
+                //Harvest Failiure
+                //TODO add science job
             }
         }
         else
         {
-            j.WorkDone();
+            if(success == true)
+            {
+                j.WorkDone();
+            }
+            else
+            {
+                //Job Failiure
+                //TODO add science job
+            }
+
         }
     }
     public void OnCancelJob()
@@ -691,8 +713,11 @@ public class Game : MonoBehaviour
         }
         jobDropdown2.ClearOptions();
         List<string> str = new List<string>();
-        //TODO Add the else if's
-        if (jobDropdown.options[jobDropdown.value].text.Contains("Farm"))
+        if (jobDropdown.options[jobDropdown.value].text.Contains("Science"))
+        {
+            str.Add("science");
+        }
+        else if (jobDropdown.options[jobDropdown.value].text.Contains("Farm"))
         {
             str.Add("fertilizing");
             str.Add("spraying");
@@ -964,7 +989,11 @@ public class Game : MonoBehaviour
     {
         List<string> str = new List<string>();
         d1.ClearOptions();
-        if (d.options[d.value].text.Equals("Farm"))
+        if (d.options[d.value].text.Equals("Science"))
+        {
+            str.Add("science");
+        }
+        else if (d.options[d.value].text.Equals("Farm"))
         {
             str.Add("wheat");
             str.Add("lentils");
@@ -1104,7 +1133,11 @@ public class Game : MonoBehaviour
         str.Add("Farm");
         foreach (Science sci in player.unlockedScience)
         {
-            if (sci.type == SCIENCE.orchards)
+            if(sci.type == SCIENCE.science)
+            {
+                str.Add("Science");
+            }
+            else if (sci.type == SCIENCE.orchards)
             {
                 str.Add("Orchard");
             }

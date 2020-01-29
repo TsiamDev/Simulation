@@ -6,6 +6,7 @@ using UnityEngine;
 //and also in Game.cs in OnValueChanged and perhaps in the jobs menu too
 public enum PROPERTY_TYPE : int
 {
+    science,
     farm,
     orchard,
     livestock,
@@ -15,6 +16,7 @@ public enum PROPERTY_TYPE : int
 
 public enum PROPERTY_SUB_TYPE : int
 {
+    science,
     //Farms
     wheat,
     lentils,
@@ -59,6 +61,7 @@ public enum PROPERTY_SUB_TYPE : int
 
 public enum JOB_SUB_TYPE : int
 {
+    science,
     harvesting, //this is for farms, orchards, livestock and aquaculture
     //Orchards
     pruning,
