@@ -660,7 +660,6 @@ public class Game : MonoBehaviour
             }else
             {
                 //Harvest Failiure
-                //TODO add science job
                 scienceJobs.Add(j);
             }
         }
@@ -798,8 +797,17 @@ public class Game : MonoBehaviour
         }
         else if (jobDropdown.options[jobDropdown.value].text.Contains("Farm"))
         {
-            str.Add("fertilizing");
-            str.Add("spraying");
+            foreach (Science sci in player.unlockedScience)
+            {
+                if(sci.type == SCIENCE.fertilizing)
+                {
+                    str.Add("fertilizing");
+                }
+                else if (sci.type == SCIENCE.spraying)
+                {
+                    str.Add("spraying");
+                }
+            }
             if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
             {
                 str.Add("harvesting");
@@ -807,9 +815,20 @@ public class Game : MonoBehaviour
         }
         else if (jobDropdown.options[jobDropdown.value].text.Contains("Orchard"))
         {
-            str.Add("pruning");
-            str.Add("fertilizing");
-            str.Add("spraying");
+            foreach (Science sci in player.unlockedScience)
+            {
+                if (sci.type == SCIENCE.fertilizing)
+                {
+                    str.Add("fertilizing");
+                }
+                else if (sci.type == SCIENCE.spraying)
+                {
+                    str.Add("spraying");
+                }else if (sci.type == SCIENCE.pruning)
+                {
+                    str.Add("pruning");
+                }
+            }
             if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
             {
                 str.Add("harvesting");
@@ -817,10 +836,19 @@ public class Game : MonoBehaviour
         }
         else if (jobDropdown.options[jobDropdown.value].text.Contains("Livestock"))
         {
-            str.Add("wrangling");
+            foreach (Science sci in player.unlockedScience)
+            {
+                if (sci.type == SCIENCE.wrangling)
+                {
+                    str.Add("wrangling");
+                }
+                else if (sci.type == SCIENCE.doctoring)
+                {
+                    str.Add("doctoring");
+                }
+            }
             str.Add("cleaning");
             str.Add("feeding");
-            str.Add("doctoring");
             if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
             {
                 str.Add("harvesting");
@@ -1331,6 +1359,12 @@ public class Game : MonoBehaviour
         else if (buttonName == "Doctoring_Button")
         {
             player.unlockedScience.Add(new Science(SCIENCE.doctoring));
+        }else if (buttonName == "Pruning_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.pruning));
+        }else if (buttonName == "Wrangling_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.wrangling));
         }
     }
     private void UnlockNewJobNodes(string buttonName, GameObject go)
@@ -1345,6 +1379,18 @@ public class Game : MonoBehaviour
                 }
             }
             else if (buttonName == "Spraying_Button")
+            {
+                if (b.name == "Pruning_Button")
+                {
+                    b.interactable = true;
+                }
+            }else if (buttonName == "Pruning_Button")
+            {
+                if (b.name == "Wrangling_Button")
+                {
+                    b.interactable = true;
+                }
+            }else if (buttonName == "Wrangling_Button")
             {
                 if (b.name == "Doctoring_Button")
                 {

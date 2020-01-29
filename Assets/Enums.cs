@@ -166,5 +166,7 @@ public enum SCIENCE : int
     //Jobs science
     fertilizing,
     spraying,
-    doctoring
+    doctoring,
+    pruning,
+    wrangling
 }
