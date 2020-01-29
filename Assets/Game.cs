@@ -651,6 +651,7 @@ public class Game : MonoBehaviour
     {
         FindProperties();
         FindHiredWorkers();
+        OnValueChangedJob();
         jobObject.SetActive(true);
 
     }
@@ -675,7 +676,6 @@ public class Game : MonoBehaviour
         {
             str.Add(p.name);
         }
-        str.Add("None");
         jobDropdown.AddOptions(str);
     }
     //jobDropdown calls this
@@ -702,16 +702,17 @@ public class Game : MonoBehaviour
                 str.Add("harvesting");
             }
         }
-        else if(jobDropdown.options[jobDropdown.value].text.Contains("Orchard"))
+        else if (jobDropdown.options[jobDropdown.value].text.Contains("Orchard"))
         {
             str.Add("pruning");
             str.Add("fertilizing");
             str.Add("spraying");
-            if(((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
+            if (((int)p.harvestingPeriod == (int)season.curSeason) || ((int)p.harvestingPeriod == 4))
             {
                 str.Add("harvesting");
             }
-        }else if (jobDropdown.options[jobDropdown.value].text.Contains("Livestock"))
+        }
+        else if (jobDropdown.options[jobDropdown.value].text.Contains("Livestock"))
         {
             str.Add("wrangling");
             str.Add("cleaning");
@@ -734,6 +735,7 @@ public class Game : MonoBehaviour
         }
         jobDropdown2.AddOptions(str);
     }
+
     //Accept button calls this from job tab
     public void OnAcceptJob()
     {
