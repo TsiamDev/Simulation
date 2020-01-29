@@ -52,7 +52,7 @@ public class Game : MonoBehaviour
     float prevX;
     float prevY;
 
-    Player player;
+    public Player player;
     bool run_timers;
     List<Image> progressImgList;
     List<Worker> avail_workers;

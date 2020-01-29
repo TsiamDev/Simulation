@@ -9,14 +9,21 @@ public class CityClick : MonoBehaviour
 {
     public GameObject cityScrollView;
     public GameObject unlockedCitiesScrollView;
-    public GameObject Game;
     public GameObject buttonPrefab;
     public GameObject mapObject;
+    public GameObject sellObject;
+    public GameObject marketGraphObject;
 
     public Text nameText;
     public Text populationText;
     public Text prosperityText;
+    public Text transportCostText;
+    public Text money_text;
 
+    public Dropdown storageDropdown;
+    public Dropdown amountDropdown;
+
+    public Game game;
     public List<GameObject> regionsObject;
     List<Region> regionsList;
     float end_day = 0;
@@ -51,10 +58,11 @@ public class CityClick : MonoBehaviour
         selectedCity = null;
 
         cityScrollView.SetActive(false);
+        //REGIONS ******************************************************************************
         regionsList = new List<Region>();
         foreach (GameObject go in regionsObject)
         {
-            if(go.name == "HomeRegionObject")
+            if (go.name == "HomeRegionObject")
             {
                 regionsList.Add(new Region(go, true));
             }
@@ -67,7 +75,7 @@ public class CityClick : MonoBehaviour
 
         foreach (Region reg in regionsList)
         {
-            if(reg.isUnlocked == true)
+            if (reg.isUnlocked == true)
             {
                 reg.go.SetActive(true);
                 foreach (City c in reg.cities)
@@ -88,6 +96,26 @@ public class CityClick : MonoBehaviour
                 reg.go.SetActive(false);
             }
         }
+
+        //TODO ADD if for every region
+        foreach (Region reg in regionsList)
+        {
+            if(reg.go.name == "RegionObject1")
+            {
+                foreach (City c in reg.cities)
+                {
+                    c.distance = 50;
+                }
+            }else if (reg.go.name == "HomeRegionObject")
+            {
+                foreach (City c in reg.cities)
+                {
+                    c.distance = 0;
+                }
+            }
+        }
+        //**************************************************************************************
+
 
 
         //TO DELETE
@@ -129,6 +157,80 @@ public class CityClick : MonoBehaviour
             }
             end_day = 0;
         }
+    }
+    private void FindStorages()
+    {
+        List<string> str = new List<string>();
+        storageDropdown.ClearOptions();
+        foreach (Storage st in game.player.storages)
+        {
+            str.Add(System.Enum.GetName(typeof(RESOURCE_TYPE), st.rt));
+        }
+        storageDropdown.AddOptions(str);
+    }
+
+    private void CalculateAmount()
+    {
+        string s = storageDropdown.options[storageDropdown.value].text;
+        RESOURCE_TYPE rt = (RESOURCE_TYPE)System.Enum.Parse(typeof(RESOURCE_TYPE), s);
+        foreach (Storage st in game.player.storages)
+        {
+            if(st.rt == rt)
+            {
+                amountDropdown.ClearOptions();
+                List<string> str = new List<string>();
+                for (float i = 0; i < st.held_resource_amount;)
+                {
+                    i += 100;
+                    if(i <= st.held_resource_amount)
+                    {
+                        str.Add(i.ToString());
+                    }
+                }
+                amountDropdown.AddOptions(str);
+                break;
+            }
+
+        }
+    }
+
+    private int UpdateTransportCost()
+    {
+        int tmp = (selectedCity.distance * 10) + int.Parse(amountDropdown.options[amountDropdown.value].text);
+        transportCostText.text = tmp.ToString();
+        return tmp;
+    }
+
+    //Sell_Button calls this
+    public void SellMarketButtonClick()
+    {
+        sellObject.SetActive(true);
+        marketGraphObject.SetActive(false);
+        FindStorages();
+        CalculateAmount();
+        UpdateTransportCost();
+    }
+
+    public void AcceptSellButtonClick()
+    {
+        int transportCost = UpdateTransportCost();
+        if (game.player.money >= transportCost)
+        {
+            game.player.money -= transportCost;
+            //TODO Add caravan
+            string s = storageDropdown.options[storageDropdown.value].text;
+            RESOURCE_TYPE rt = (RESOURCE_TYPE)System.Enum.Parse(typeof(RESOURCE_TYPE), s);
+            int amount = int.Parse(amountDropdown.options[amountDropdown.value].text);
+            game.player.money += (int)(selectedCity.market.resource_price_dict[rt] * amount);
+            money_text.text = "Money : " + game.player.money;
+        }
+    }
+
+    //Market_Button calls this
+    public void MarketButtonClick()
+    {
+        marketGraphObject.SetActive(true);
+        sellObject.SetActive(false);
     }
 
     public void UnlockedCity_Button_Click(City c)

@@ -9,6 +9,7 @@ public class City
     public PROSPERITY prosperity;
     public Market market;
     public string name;
+    public int distance;
 
     static int num = 0;
 
@@ -20,6 +21,7 @@ public class City
         this.population = Random.Range(1, 500);
         this.prosperity = PROSPERITY.stagnating;
         this.market = new Market(); //TODO make market not have all the items 
+        this.distance = 0;
     }
 
     public void CheckProsperity()
