@@ -204,6 +204,7 @@ public class Game : MonoBehaviour
                         if (avail_workers[i].job_name == player.jobs[j].job_name)
                         {
                             avail_workers[i].is_working = false;
+                            UpdateHiredWorkers();
                         }
                     }
                     //Destroy Job Button & Image
@@ -759,6 +760,7 @@ public class Game : MonoBehaviour
                         ));
                     avail_workers[i].is_working = true;
                     avail_workers[i].job_name = player.jobs[player.jobs.Count - 1].job_name;
+                    UpdateHiredWorkers();
 
                     foreach (Job j1 in player.jobs)
                     {
@@ -889,6 +891,15 @@ public class Game : MonoBehaviour
             tempButton.onClick.AddListener(() => Worker_Button_Click(tempButton.GetComponentInChildren<Text>().text));
             tempButton.GetComponentInChildren<Text>().text = w.name;
             tempButton.name = w.name;
+
+            if (w.is_working == true)
+            {
+                tempButton.GetComponent<Image>().color = Color.red;
+            }
+            else
+            {
+                tempButton.GetComponent<Image>().color = Color.green;
+            }
         }
     }
     public void Worker_Button_Click(string name)
