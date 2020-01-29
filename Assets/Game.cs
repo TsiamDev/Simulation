@@ -1242,13 +1242,10 @@ public class Game : MonoBehaviour
         List<string> str = new List<string>();
         d.ClearOptions();
         str.Add("Farm");
+        str.Add("Science");
         foreach (Science sci in player.unlockedScience)
         {
-            if(sci.type == SCIENCE.science)
-            {
-                str.Add("Science");
-            }
-            else if (sci.type == SCIENCE.orchards)
+            if (sci.type == SCIENCE.orchards)
             {
                 str.Add("Orchard");
             }
@@ -1319,6 +1316,7 @@ public class Game : MonoBehaviour
     }
     //********************************************************************************
     //SCIENCE ************************************************************************
+    /*
     //Science_Lab_Button calls this
     public void ScienceLabButtonPress()
     {
@@ -1338,7 +1336,8 @@ public class Game : MonoBehaviour
             player.unlockedScience.Add(new Science(SCIENCE.science));
         }
     }
-    //SCience jobs buttons call this
+    */
+    //Science jobs buttons call this
     public void ScienceJobButtonPress()
     {
         string buttonName = EventSystem.current.currentSelectedGameObject.name;
