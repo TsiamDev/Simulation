@@ -157,6 +157,7 @@ public enum PROSPERITY : int
 
 public enum SCIENCE : int
 {
+    science,
     //Property science
     orchards,
     livestock,

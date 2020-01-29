@@ -62,6 +62,13 @@ public class Game : MonoBehaviour
 
     //Science
     public List<Button> scienceButtons;
+    List<Job> scienceJobs;
+    int researchExpPoints;
+    int rplevel;
+    int researchPoints;
+    public Text researchText;
+    public Text rpText;
+    List<Job> scienceWorkingJobs;
 
     //WindowGraph
     public Sprite dotSprite;
@@ -151,6 +158,13 @@ public class Game : MonoBehaviour
         scrollBarY.value = 0.50f;
         //*************************************************************************************
         //SCIENCE *****************************************************************************
+        scienceJobs = new List<Job>();
+        scienceWorkingJobs = new List<Job>();
+        researchExpPoints = 0;
+        rplevel = 1;
+        researchPoints = 0;
+        researchText.text = "Research Points : " + researchExpPoints + "/" + (rplevel * 10);
+        rpText.text = researchPoints + " unused points";
         foreach (Button b in scienceButtons)
         {
             if( (b.name == "Orchards_Button") || (b.name == "Fertilizing_Button") )
@@ -647,18 +661,72 @@ public class Game : MonoBehaviour
             {
                 //Harvest Failiure
                 //TODO add science job
+                scienceJobs.Add(j);
             }
         }
         else
         {
             if(success == true)
             {
-                j.WorkDone();
+                if(j.type == PROPERTY_TYPE.science)
+                {
+                    researchExpPoints += UnityEngine.Random.Range(1, 3);
+                    researchText.text = "Research Points : " + researchExpPoints + "/" + (rplevel * 10);
+                    if (researchExpPoints % (rplevel*10) == 0)
+                    {
+                        researchExpPoints = 0;
+                        researchPoints++;
+                        rplevel++;
+                        researchText.text = "Research Points : " + researchExpPoints + "/" + (rplevel * 10);
+                        rpText.text = researchPoints + " unused points";
+                    }
+                    for (int i = 0; i < scienceJobs.Count; i++)
+                    {
+                        if(j.job_name.Contains(scienceJobs[i].job_name))
+                        {
+                            scienceJobs.RemoveAt(i);
+                        }
+                    }
+                    /*
+                    foreach (Job j1 in scienceWorkingJobs)
+                    {
+                        if(j1.job_name == j.job_name)
+                        {
+                            scienceWorkingJobs.Remove(j);
+                        }
+                    }*/
+                }
+                else
+                {
+                    j.WorkDone();
+                }
             }
             else
             {
                 //Job Failiure
-                //TODO add science job
+                if(!(j.type == PROPERTY_TYPE.science))
+                {
+                    scienceJobs.Add(j);
+                }
+                else
+                {
+                    //science job failure remove job
+                    for (int i = 0; i < scienceJobs.Count; i++)
+                    {
+                        if (j.job_name.Contains(scienceJobs[i].job_name))
+                        {
+                            scienceJobs.RemoveAt(i);
+                        }
+                    }
+                    /*
+                    foreach (Job j1 in scienceWorkingJobs)
+                    {
+                        if (j1.job_name == j.job_name)
+                        {
+                            scienceWorkingJobs.Remove(j);
+                        }
+                    }*/
+                }
             }
 
         }
@@ -715,7 +783,18 @@ public class Game : MonoBehaviour
         List<string> str = new List<string>();
         if (jobDropdown.options[jobDropdown.value].text.Contains("Science"))
         {
-            str.Add("science");
+            for (int i = 0; i < scienceJobs.Count; i++)
+            {
+                str.Add("science " + scienceJobs[i].job_name);
+                /*
+                foreach (Job j in scienceWorkingJobs)
+                {
+                    if(!(j.job_name == scienceJobs[i].job_name))
+                    {
+
+                    }
+                }*/
+            }
         }
         else if (jobDropdown.options[jobDropdown.value].text.Contains("Farm"))
         {
@@ -787,6 +866,10 @@ public class Game : MonoBehaviour
                     avail_workers[i].is_working = true;
                     avail_workers[i].job_name = player.jobs[player.jobs.Count - 1].job_name;
                     UpdateHiredWorkers();
+                    if(player.jobs[player.jobs.Count - 1].type == PROPERTY_TYPE.science)
+                    {
+                        scienceWorkingJobs.Add(player.jobs[player.jobs.Count - 1]);
+                    }
 
                     foreach (Job j1 in player.jobs)
                     {
@@ -1208,6 +1291,25 @@ public class Game : MonoBehaviour
     }
     //********************************************************************************
     //SCIENCE ************************************************************************
+    //Science_Lab_Button calls this
+    public void ScienceLabButtonPress()
+    {
+        string buttonName = EventSystem.current.currentSelectedGameObject.name;
+        GameObject go = EventSystem.current.currentSelectedGameObject;
+        UnlockScienceLab(buttonName);
+        UnlockNewLabNodes(buttonName, go);
+    }
+    private void UnlockNewLabNodes(string buttonName, GameObject go)
+    {
+        go.GetComponent<Image>().color = Color.green;
+    }
+    private void UnlockScienceLab(string buttonName)
+    {
+        if (buttonName == "Science_Lab_Button")
+        {
+            player.unlockedScience.Add(new Science(SCIENCE.science));
+        }
+    }
     //SCience jobs buttons call this
     public void ScienceJobButtonPress()
     {

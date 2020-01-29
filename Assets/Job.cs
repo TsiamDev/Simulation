@@ -165,7 +165,7 @@ public class Job
             this.sub_type = JOB_SUB_TYPE.harvesting;
             this.work = HARVESTING_WORK;
             this.is_harvesting_job = true;
-        }else if (sub_type == "science")
+        }else if (sub_type.Contains("science"))
         {
             this.sub_type = JOB_SUB_TYPE.science;
             this.work = SCIENCE_WORK;
